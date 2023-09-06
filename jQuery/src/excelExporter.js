@@ -1,6 +1,6 @@
-const MIN_COLUMN_WIDTH = 10;
-const PIXELS_PER_INDENT = 10;
-const PIXELS_PER_EXCEL_WIDTH_UNIT = 8;
+const MINCOLUMNWIDTH = 10;
+const PIXELSPERINDENT = 10;
+const PIXELSPEREXCELWIDTHUNIT = 8;
 
 class TreeListHelpers {
   constructor(component, worksheet, options) {
@@ -8,10 +8,10 @@ class TreeListHelpers {
     this.worksheet = worksheet;
     this.columns = this.component.getVisibleColumns();
 
-    this.rootValue = this.component.option("rootValue");
-    this.parentIdExpr = this.component.option("parentIdExpr");
-    this.keyExpr = this.component.option("keyExpr") || this.component.getDataSource().key();
-    this.dataStructure = this.component.option("dataStructure");
+    this.rootValue = this.component.option('rootValue');
+    this.parentIdExpr = this.component.option('parentIdExpr');
+    this.keyExpr = this.component.option('keyExpr') || this.component.getDataSource().key();
+    this.dataStructure = this.component.option('dataStructure');
 
     this.worksheet.properties.outlineProperties = {
       summaryBelow: false,
@@ -19,29 +19,29 @@ class TreeListHelpers {
     };
   }
 
-  _getData() {
+  getData() {
     return this.component
       .getDataSource()
       .store()
       .load()
-      .then((result) => this._processData(result));
+      .then((result) => this.processData(result));
   }
 
-  _processData(data) {
+  processData(data) {
     let rows = data;
-    if (this.dataStructure === "plain") rows = this._convertToHierarchical(rows);
-    return this._depthDecorator(rows);
+    if (this.dataStructure === 'plain') rows = this.convertToHierarchical(rows);
+    return this.depthDecorator(rows);
   }
 
   // adds the depth for hierarchical data
-  _depthDecorator(data, depth = 0) {
+  depthDecorator(data, depth = 0) {
     const result = [];
 
     data.forEach((node) => {
       result.push({
         ...node,
         depth,
-        items: this._depthDecorator(node.items || [], depth + 1),
+        items: this.depthDecorator(node.items || [], depth + 1),
       });
     });
 
@@ -49,7 +49,7 @@ class TreeListHelpers {
   }
 
   // converts plain to hierarchical
-  _convertToHierarchical(data, id = this.rootValue) {
+  convertToHierarchical(data, id = this.rootValue) {
     const result = [];
     const roots = [];
 
@@ -60,22 +60,22 @@ class TreeListHelpers {
     roots.forEach((node) => {
       result.push({
         ...node,
-        items: this._convertToHierarchical(data, node[this.keyExpr]),
+        items: this.convertToHierarchical(data, node[this.keyExpr]),
       });
     });
 
     return result;
   }
 
-  _exportRows(rows) {
+  exportRows(rows) {
     rows.forEach((row) => {
-      this._exportRow(row);
+      this.exportRow(row);
 
-      if (this._hasChildren(row)) this._exportRows(row.items);
+      if (this.hasChildren(row)) this.exportRows(row.items);
     });
   }
 
-  _exportRow(row) {
+  exportRow(row) {
     const insertedRow = this.worksheet.addRow(row);
     insertedRow.outlineLevel = row.depth;
     this.worksheet.getCell(`A${insertedRow.number}`).alignment = {
@@ -83,24 +83,25 @@ class TreeListHelpers {
     };
   }
 
-  _generateColumns() {
+  generateColumns() {
     this.worksheet.columns = this.columns.map(({ caption, dataField }) => ({
       header: caption,
       key: dataField,
     }));
   }
 
-  _hasChildren(row) {
+  hasChildren(row) {
     return row.items && row.items.length > 0;
   }
 
-  _autoFitColumnsWidth() {
+  autoFitColumnsWidth() {
     this.worksheet.columns.forEach((column) => {
-      let maxLength = MIN_COLUMN_WIDTH;
+      let maxLength = MINCOLUMNWIDTH;
       if (column.number === 1) {
         // first column
         column.eachCell((cell) => {
-          const indent = cell.alignment && cell.alignment.indent * (PIXELS_PER_INDENT / PIXELS_PER_EXCEL_WIDTH_UNIT);
+          const indent =
+            cell.alignment && cell.alignment.indent * (PIXELSPERINDENT / PIXELSPEREXCELWIDTHUNIT);
           const valueLength = cell.value.toString().length;
 
           if (indent + valueLength > maxLength) maxLength = indent + valueLength;
@@ -115,12 +116,12 @@ class TreeListHelpers {
   }
 
   export() {
-    this.component.beginCustomLoading("Exporting to Excel...");
+    this.component.beginCustomLoading('Exporting to Excel...');
 
-    return this._getData().then((rows) => {
-      this._generateColumns();
-      this._exportRows(rows);
-      this._autoFitColumnsWidth();
+    return this.getData().then((rows) => {
+      this.generateColumns();
+      this.exportRows(rows);
+      this.autoFitColumnsWidth();
       this.component.endCustomLoading();
     });
   }

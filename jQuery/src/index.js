@@ -1,24 +1,24 @@
-import { exportTreeList } from "https://cdn.jsdelivr.net/gh/Madobyte/devextreme-treelist-export-exceljs@latest/excelExporter.js";
+import { exportTreeList } from './excelExporter.js';
 
 $(() => {
-  const treeList = $("#employees")
+  const treeList = $('#employees')
     .dxTreeList({
       dataSource: employees,
       rootValue: -1,
-      keyExpr: "ID",
-      parentIdExpr: "Head_ID",
+      keyExpr: 'ID',
+      parentIdExpr: 'Head_ID',
       columns: [
         {
-          dataField: "Title",
-          caption: "Position",
+          dataField: 'Title',
+          caption: 'Position',
         },
-        "Full_Name",
-        "City",
-        "State",
-        "Mobile_Phone",
+        'Full_Name',
+        'City',
+        'State',
+        'Mobile_Phone',
         {
-          dataField: "Hire_Date",
-          dataType: "date",
+          dataField: 'Hire_Date',
+          dataType: 'date',
         },
       ],
       expandedRowKeys: [1],
@@ -28,29 +28,29 @@ $(() => {
       toolbar: {
         items: [
           {
-            name: "exportToXlsx", //exportButton does not work
-            widget: "dxButton",
-            locateInMenu: "auto",
+            name: 'exportToXlsx',
+            widget: 'dxButton',
+            locateInMenu: 'auto',
             options: {
-              icon: "xlsxfile",
+              icon: 'xlsxfile',
               onClick: exportToExcel,
             },
           },
         ],
       },
     })
-    .dxTreeList("instance");
+    .dxTreeList('instance');
 
   function exportToExcel() {
     const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet("Employees");
+    const worksheet = workbook.addWorksheet('Employees');
 
     exportTreeList({
       component: treeList,
       worksheet,
     }).then(() => {
       workbook.xlsx.writeBuffer().then((buffer) => {
-        saveAs(new Blob([buffer], { type: "application/octet-stream" }), "Employees.xlsx");
+        saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'Employees.xlsx');
       });
     });
   }
