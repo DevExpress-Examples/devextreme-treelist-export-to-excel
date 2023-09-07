@@ -100,8 +100,9 @@ class TreeListHelpers {
       if (column.number === 1) {
         // first column
         column.eachCell((cell) => {
-          const indent =
-            cell.alignment && cell.alignment.indent * (PIXELSPERINDENT / PIXELSPEREXCELWIDTHUNIT);
+          const indent = cell.alignment
+            ? cell.alignment.indent * (PIXELSPERINDENT / PIXELSPEREXCELWIDTHUNIT)
+            : 0;
           const valueLength = cell.value.toString().length;
 
           if (indent + valueLength > maxLength) maxLength = indent + valueLength;
