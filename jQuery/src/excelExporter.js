@@ -1,6 +1,6 @@
-const MINCOLUMNWIDTH = 10;
-const PIXELSPERINDENT = 10;
-const PIXELSPEREXCELWIDTHUNIT = 8;
+const MIN_COLUMN_WIDTH = 10;
+const PIXELS_PER_INDENT = 10;
+const PIXELS_PER_EXCEL_WIDTH_UNIT = 8;
 
 class TreeListHelpers {
   constructor(component, worksheet, options) {
