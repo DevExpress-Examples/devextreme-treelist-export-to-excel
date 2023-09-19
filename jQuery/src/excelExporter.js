@@ -15,7 +15,7 @@ class TreeListHelpers {
 
     this.rootValue = this.component.option('rootValue');
     this.parentIdExpr = this.component.option('parentIdExpr');
-    this.keyExpr = this.component.option('keyExpr') || this.component.getDataSource().key();
+    this.keyExpr = this.component.option('keyExpr') ?? this.component.getDataSource().key();
     this.dataStructure = this.component.option('dataStructure');
 
     this.worksheet.properties.outlineProperties = {
@@ -46,7 +46,7 @@ class TreeListHelpers {
       result.push({
         ...node,
         depth,
-        items: this.depthDecorator(node.items || [], depth + 1),
+        items: this.depthDecorator(node.items ?? [], depth + 1),
       });
     });
 
