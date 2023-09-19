@@ -1,12 +1,16 @@
 const MIN_COLUMN_WIDTH = 10;
 const PIXELS_PER_INDENT = 10;
 const PIXELS_PER_EXCEL_WIDTH_UNIT = 8;
+const CELL_PADDING = 2;
 
 class TreeListHelpers {
   constructor(component, worksheet, options) {
     this.component = component;
     this.worksheet = worksheet;
     this.columns = this.component.getVisibleColumns();
+    this.dateColumns = this.columns.filter(
+      (column) => column.dataType === 'date' || column.dataType === 'datetime',
+    );
 
     this.rootValue = this.component.option('rootValue');
     this.parentIdExpr = this.component.option('parentIdExpr');
@@ -76,11 +80,19 @@ class TreeListHelpers {
   }
 
   exportRow(row) {
+    this.formatDates(row);
+
     const insertedRow = this.worksheet.addRow(row);
     insertedRow.outlineLevel = row.depth;
     this.worksheet.getCell(`A${insertedRow.number}`).alignment = {
       indent: row.depth * 2,
     };
+  }
+
+  formatDates(row) {
+    this.dateColumns.forEach((column) => {
+      row[column.dataField] = new Date(row[column.dataField]);
+    });
   }
 
   generateColumns() {
@@ -96,12 +108,12 @@ class TreeListHelpers {
 
   autoFitColumnsWidth() {
     this.worksheet.columns.forEach((column) => {
-      let maxLength = MINCOLUMNWIDTH;
+      let maxLength = MIN_COLUMN_WIDTH;
       if (column.number === 1) {
         // first column
         column.eachCell((cell) => {
           const indent = cell.alignment
-            ? cell.alignment.indent * (PIXELSPERINDENT / PIXELSPEREXCELWIDTHUNIT)
+            ? cell.alignment.indent * (PIXELS_PER_INDENT / PIXELS_PER_EXCEL_WIDTH_UNIT)
             : 0;
           const valueLength = cell.value.toString().length;
 
@@ -109,7 +121,24 @@ class TreeListHelpers {
         });
       } else {
         column.values.forEach((v) => {
-          if (v.toString().length > maxLength) maxLength = v.toString().length;
+          // date column
+          if (
+            this.dateColumns.some((dateColumn) => dateColumn.dataField === column.key)
+            && typeof v !== 'string'
+            && v.toLocaleDateString().length > maxLength
+          ) {
+            maxLength = v.toLocaleDateString().length;
+          }
+
+          // other columns
+          if (
+            !this.dateColumns.some((dateColumn) => dateColumn.dataField === column.key)
+            && v.toString().length > maxLength
+          ) {
+            maxLength = v.toString().length;
+          }
+
+          column.width = maxLength + CELL_PADDING;
         });
       }
       column.width = maxLength;
