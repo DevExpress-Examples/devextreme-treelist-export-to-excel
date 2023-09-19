@@ -145,11 +145,9 @@ class TreeListHelpers {
           ) {
             maxLength = v.toString().length;
           }
-
-          column.width = maxLength + CELL_PADDING;
         });
       }
-      column.width = maxLength;
+      column.width = maxLength + CELL_PADDING;
     });
   }
 
