@@ -130,11 +130,7 @@ class TreeListHelpers {
 
 function exportTreeList({ component, worksheet }) {
   const helpers = new TreeListHelpers(component, worksheet);
-  return new Promise((resolve, reject) => {
-    helpers.export().then(() => {
-      resolve();
-    });
-  });
+  return helpers.export();
 }
 
 export { exportTreeList };
