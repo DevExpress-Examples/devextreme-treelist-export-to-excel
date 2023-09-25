@@ -4,7 +4,7 @@ import 'devextreme/dist/css/dx.material.blue.light.compact.css';
 import TreeList, { Column, Toolbar, Item } from 'devextreme-react/tree-list';
 import { Workbook } from 'exceljs';
 import saveAs from 'file-saver';
-import { exportTreeList } from './excelExporter';
+import { exportTreeList } from './excelExporter.mjs';
 import { employees } from './data';
 
 const expandedRowKeys = [1];
@@ -28,7 +28,7 @@ function App(): JSX.Element {
             'Employees.xlsx',
           );
         })
-        .catch((error) => console.log(error));
+        .catch(() => {});
     });
   }, []);
 
