@@ -19,7 +19,7 @@ let defaultScripts = [
     exportScripts = [
         "node_modules/jszip/dist/jszip.min.js",
         "node_modules/exceljs/dist/exceljs.min.js",
-        "node_modules/file-saver/FileSaver.min.js"
+        "node_modules/file-saver/dist/FileSaver.min.js"
     ],
     quillScripts = ["node_modules/devextreme-quill/dist/dx-quill.min.js",
         "node_modules/turndown/dist/turndown.js",
@@ -60,9 +60,9 @@ styles = [...styles, ...diagramStyles];
 scripts = [...defaultScripts, ...quillScripts, dxtScripts];
 */
 
-/* // Export 
+// Export 
 scripts = [...exportScripts, ...scripts];
-*/
+
 
  /* // Full bundle 
 
