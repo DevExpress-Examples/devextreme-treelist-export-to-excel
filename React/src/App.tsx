@@ -4,7 +4,7 @@ import 'devextreme/dist/css/dx.material.blue.light.compact.css';
 import TreeList, { Column, Toolbar, Item } from 'devextreme-react/tree-list';
 import { Workbook } from 'exceljs';
 import saveAs from 'file-saver';
-import { exportTreeList } from './excelExporter.mjs';
+import { exportTreeList } from './excelExporter';
 import { employees } from './data';
 
 const expandedRowKeys = [1];
@@ -19,17 +19,19 @@ function App(): JSX.Element {
     exportTreeList({
       component: treeList.current?.instance,
       worksheet,
-    }).then(() => {
-      workbook.xlsx
-        .writeBuffer()
-        .then((buffer) => {
-          saveAs(
-            new Blob([buffer], { type: 'application/octet-stream' }),
-            'Employees.xlsx',
-          );
-        })
-        .catch(() => {});
-    });
+    })
+      .then(() => {
+        workbook.xlsx
+          .writeBuffer()
+          .then((buffer) => {
+            saveAs(
+              new Blob([buffer], { type: 'application/octet-stream' }),
+              'Employees.xlsx',
+            );
+          })
+          .catch(() => {});
+      })
+      .catch(() => {});
   }, []);
 
   const exportButtonOptions = useMemo(
