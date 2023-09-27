@@ -1,5 +1,9 @@
-import { Component } from '@angular/core';
-import { ClickEvent } from 'devextreme/ui/button';
+import { Component, ViewChild } from '@angular/core';
+import { DxTreeListComponent } from 'devextreme-angular';
+import { Workbook } from 'exceljs';
+import { saveAs } from 'file-saver';
+import { Employee, Service } from './app.service';
+import { exportTreeList } from './excelExporter';
 
 @Component({
   selector: 'app-root',
@@ -7,14 +11,39 @@ import { ClickEvent } from 'devextreme/ui/button';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  title = 'Angular';
+  @ViewChild('treeList', { static: false }) treeList!: DxTreeListComponent;
 
-  counter = 0;
+  employees: Employee[];
 
-  buttonText = 'Click count: 0';
+  expandedRowKeys: number[];
 
-  onClick(e: ClickEvent): void {
-    this.counter++;
-    this.buttonText = `Click count: ${this.counter}`;
+  exportButtonOptions: any;
+
+  constructor(service: Service) {
+    this.employees = service.getEmployees();
+    this.expandedRowKeys = [1];
+    this.exportButtonOptions = {
+      icon: 'xlsxfile',
+      onClick: this.exportToExcel.bind(this),
+    };
+  }
+
+  exportToExcel(): void {
+    const workbook = new Workbook();
+    const worksheet = workbook.addWorksheet('Employees');
+
+    exportTreeList({
+      component: this.treeList.instance,
+      worksheet,
+    })
+      .then(() => {
+        workbook.xlsx
+          .writeBuffer()
+          .then((buffer) => {
+            saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'Employees.xlsx');
+          })
+          .catch(() => {});
+      })
+      .catch(() => {});
   }
 }

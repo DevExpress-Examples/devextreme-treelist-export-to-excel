@@ -1,3 +1,28 @@
-<div class="default-style">
-  <dx-button [text]="buttonText" (onClick)="onClick($event)"></dx-button>
-</div>
+<dx-tree-list
+  #treeList
+  id="tree-list"
+  [dataSource]="employees"
+  [rootValue]="-1"
+  keyExpr="ID"
+  parentIdExpr="Head_ID"
+  [(expandedRowKeys)]="expandedRowKeys"
+  [showRowLines]="true"
+  [showBorders]="true"
+  [columnAutoWidth]="true"
+>
+  <dxi-column dataField="Title" caption="Position" />
+  <dxi-column dataField="Full_Name" />
+  <dxi-column dataField="City" />
+  <dxi-column dataField="State" />
+  <dxi-column dataField="Mobile_Phone" />
+  <dxi-column dataField="Hire_Date" dataType="date" />
+
+  <dxo-toolbar>
+    <dxi-item
+      name="exportToXlsx"
+      widget="dxButton"
+      locateInMenu="auto"
+      [options]="exportButtonOptions"
+    />
+  </dxo-toolbar>
+</dx-tree-list>
