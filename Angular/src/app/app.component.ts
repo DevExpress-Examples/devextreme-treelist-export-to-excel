@@ -1,9 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
 import { DxTreeListComponent } from 'devextreme-angular';
-import { Employee, Service } from './app.service';
 import { Workbook } from 'exceljs';
 import { saveAs } from 'file-saver';
-
+import { Employee, Service } from './app.service';
 import { exportTreeList } from './excelExporter';
 
 @Component({
