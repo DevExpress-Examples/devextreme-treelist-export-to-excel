@@ -1,8 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
+import { DxTreeListComponent } from 'devextreme-angular';
 import { Employee, Service } from './app.service';
 import { Workbook } from 'exceljs';
 import { saveAs } from 'file-saver';
-import { DxTreeListComponent } from 'devextreme-angular';
 
 import { exportTreeList } from './excelExporter';
 
@@ -12,9 +12,12 @@ import { exportTreeList } from './excelExporter';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  @ViewChild('treeList', { static: false }) treeList: DxTreeListComponent;
+  @ViewChild('treeList', { static: false }) treeList!: DxTreeListComponent;
+
   employees: Employee[];
+
   expandedRowKeys: number[];
+
   exportButtonOptions: any;
 
   constructor(service: Service) {
@@ -26,19 +29,22 @@ export class AppComponent {
     };
   }
 
-  exportToExcel() {
+  exportToExcel(): void {
     const workbook = new Workbook();
     const worksheet = workbook.addWorksheet('Employees');
-
-    console.log(this);
 
     exportTreeList({
       component: this.treeList.instance,
       worksheet,
-    }).then(() => {
-      workbook.xlsx.writeBuffer().then((buffer) => {
-        saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'Employees.xlsx');
-      });
-    });
+    })
+      .then(() => {
+        workbook.xlsx
+          .writeBuffer()
+          .then((buffer) => {
+            saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'Employees.xlsx');
+          })
+          .catch(() => {});
+      })
+      .catch(() => {});
   }
 }
