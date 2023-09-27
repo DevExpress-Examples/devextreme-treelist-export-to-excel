@@ -1,15 +1,15 @@
 import TreeList, { Column, DataStructure } from 'devextreme/ui/tree_list';
 import { Worksheet } from 'exceljs';
-import { Employee } from './data';
+import { Employee, EmployeeWithItems } from './data';
 
 const MIN_COLUMN_WIDTH = 10;
 const PIXELS_PER_INDENT = 10;
 const PIXELS_PER_EXCEL_WIDTH_UNIT = 8;
 const CELL_PADDING = 2;
 
-interface EmployeeWithItems extends Employee {
-  items: Employee[];
-  depth: number;
+interface TreeListExcelProps {
+  component: TreeList;
+  worksheet: Worksheet;
 }
 
 class TreeListHelpers {
@@ -65,7 +65,7 @@ class TreeListHelpers {
       .then((result: Employee[]) => this.processData(result));
   }
 
-  private processData(data: Employee[]): Employee[] {
+  private processData(data: Employee[]): EmployeeWithItems[] {
     let rows = data;
     if (this.dataStructure === 'plain') rows = this.convertToHierarchical(rows);
     return this.depthDecorator(rows);
@@ -110,10 +110,10 @@ class TreeListHelpers {
   }
 
   private exportRows(rows: EmployeeWithItems[]): void {
-    rows.forEach((row: any) => {
+    rows.forEach((row: EmployeeWithItems) => {
       this.exportRow(row);
 
-      if (this.hasChildren(row)) this.exportRows(row.items);
+      if (this.hasChildren(row)) this.exportRows(row.items as EmployeeWithItems[]);
     });
   }
 
@@ -128,9 +128,9 @@ class TreeListHelpers {
     };
   }
 
-  private formatDates(row: any): void {
-    this.dateColumns.forEach((column: any) => {
-      row[column.dataField] = new Date(row[column.dataField]);
+  private formatDates(row: EmployeeWithItems): void {
+    this.dateColumns.forEach((column) => {
+      if (column.dataField !== undefined) row[column.dataField] = new Date(row[column.dataField]);
     });
   }
 
@@ -176,7 +176,7 @@ class TreeListHelpers {
           // date column
           if (
             this.dateColumns.some(
-              (dateColumn: any) => dateColumn.dataField === column.key,
+              (dateColumn) => dateColumn.dataField === column.key,
             )
             && typeof v !== 'string'
             && v.toLocaleDateString().length > maxLength
@@ -211,7 +211,10 @@ class TreeListHelpers {
   }
 }
 
-function exportTreeList({ component, worksheet }: any): Promise<void> {
+function exportTreeList({
+  component,
+  worksheet,
+}: TreeListExcelProps): Promise<void> {
   const helpers = new TreeListHelpers(component, worksheet);
   return helpers.export();
 }

@@ -1,6 +1,6 @@
 export interface Employee {
-  ID: Number;
-  Head_ID: Number;
+  ID: number;
+  Head_ID: number;
   Full_Name: string;
   Prefix: string;
   Title: string;
@@ -11,6 +11,12 @@ export interface Employee {
   Mobile_Phone: string;
   Birth_Date: string;
   Hire_Date: string;
+}
+
+export interface EmployeeWithItems extends Employee {
+  [key: string]: any;
+  items: Employee[] | EmployeeWithItems[];
+  depth: number;
 }
 
 export const employees: Employee[] = [

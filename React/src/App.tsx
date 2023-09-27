@@ -16,22 +16,24 @@ function App(): JSX.Element {
     const workbook = new Workbook();
     const worksheet = workbook.addWorksheet('Employees');
 
-    exportTreeList({
-      component: treeList.current?.instance,
-      worksheet,
-    })
-      .then(() => {
-        workbook.xlsx
-          .writeBuffer()
-          .then((buffer) => {
-            saveAs(
-              new Blob([buffer], { type: 'application/octet-stream' }),
-              'Employees.xlsx',
-            );
-          })
-          .catch(() => {});
+    if (treeList.current !== null) {
+      exportTreeList({
+        component: treeList.current.instance,
+        worksheet,
       })
-      .catch(() => {});
+        .then(() => {
+          workbook.xlsx
+            .writeBuffer()
+            .then((buffer) => {
+              saveAs(
+                new Blob([buffer], { type: 'application/octet-stream' }),
+                'Employees.xlsx',
+              );
+            })
+            .catch(() => {});
+        })
+        .catch(() => {});
+    }
   }, []);
 
   const exportButtonOptions = useMemo(
