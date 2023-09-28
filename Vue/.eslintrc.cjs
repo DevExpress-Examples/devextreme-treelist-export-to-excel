@@ -9,7 +9,7 @@ module.exports = {
       parserOptions: {
         project: "./tsconfig.json",
         createDefaultProgram: true,
-        ecmaVersion: 2020,
+        'ecmaVersion': 2020,
       },
       globals: {
         System: false,
