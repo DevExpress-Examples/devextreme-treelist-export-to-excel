@@ -6,7 +6,7 @@ import {
   Row,
   Worksheet,
 } from 'exceljs';
-import { Employee, EmployeeWithItems } from './app-service';
+import { Employee, EmployeeWithItems } from './app.service';
 
 const MIN_COLUMN_WIDTH = 10;
 const PIXELS_PER_INDENT = 10;
