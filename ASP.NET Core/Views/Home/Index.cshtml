@@ -3,28 +3,28 @@
 <h2>Home</h2>
 
 @(
-Html.DevExtreme().TreeList()
+Html.DevExtreme().TreeList<ASP.NET_Core.Models.Employee>()
     .ID("employees")
-    .DataSource(new JS("employees"))
-    .RootValue(-1)
-    .KeyExpr("ID")
-    .ParentIdExpr("Head_ID")
+    .DataSource(ds => ds.Mvc()
+        .Controller("Employees")
+        .LoadAction("Get")
+        .Key("ID")
+    )
+    .RootValue(0)
+    .ParentIdExpr("HeadID")
     .Columns(columns =>
     {
-        columns.Add()
-            .DataField("Title")
+        columns.AddFor(m => m.Title)
             .Caption("Position");
 
-        columns.Add().DataField("Full_Name");
+        columns.AddFor(m => m.FullName);
+        columns.AddFor(m => m.City);
+        columns.AddFor(m => m.State);
+        columns.AddFor(m => m.MobilePhone);
+        columns.AddFor(m => m.FullName);
 
-        columns.Add().DataField("City");
 
-        columns.Add().DataField("State");
-
-        columns.Add().DataField("Mobile_Phone");
-
-        columns.Add()
-            .DataField("Hire_Date")
+        columns.AddFor(m => m.HireDate)
             .DataType(GridColumnDataType.Date);
     })
     .ShowRowLines(true)
