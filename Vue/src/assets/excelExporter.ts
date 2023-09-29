@@ -1,13 +1,13 @@
-import type TreeList from 'devextreme/ui/tree_list';
-import type { Column, DataStructure } from 'devextreme/ui/tree_list';
+import type TreeList from "devextreme/ui/tree_list";
+import type { Column, DataStructure } from "devextreme/ui/tree_list";
 import type {
   Cell,
   CellValue,
   Column as ExcelColumn,
   Row,
   Worksheet,
-} from 'exceljs';
-import type { Employee, EmployeeWithItems } from './data';
+} from "exceljs";
+import type { Employee, EmployeeWithItems } from "./data";
 
 const MIN_COLUMN_WIDTH = 10;
 const PIXELS_PER_INDENT = 10;
@@ -43,18 +43,18 @@ class TreeListHelpers {
     this.worksheet = worksheet;
     this.columns = this.component.getVisibleColumns();
     this.dateColumns = this.columns.filter(
-      (column) => column.dataType === 'date' || column.dataType === 'datetime'
+      (column) => column.dataType === "date" || column.dataType === "datetime"
     );
     this.lookupColumns = this.columns.filter(
       (column) => column.lookup !== undefined
     );
 
-    this.rootValue = this.component.option('rootValue');
-    this.parentIdExpr = this.component.option('parentIdExpr') as string;
-    this.keyExpr = (this.component.option('keyExpr') ??
+    this.rootValue = this.component.option("rootValue");
+    this.parentIdExpr = this.component.option("parentIdExpr") as string;
+    this.keyExpr = (this.component.option("keyExpr") ??
       this.component.getDataSource().key()) as string;
     this.dataStructure = this.component.option(
-      'dataStructure'
+      "dataStructure"
     ) as DataStructure;
 
     // bug: check ExcelJS's GitHub issues #1352 & #2218
@@ -75,7 +75,7 @@ class TreeListHelpers {
 
   private processData(data: Employee[]): EmployeeWithItems[] {
     let rows = data;
-    if (this.dataStructure === 'plain') rows = this.convertToHierarchical(rows);
+    if (this.dataStructure === "plain") rows = this.convertToHierarchical(rows);
     return this.depthDecorator(rows);
   }
 
@@ -90,7 +90,7 @@ class TreeListHelpers {
         ...node,
         depth,
         items: this.depthDecorator(
-          'items' in node ? node.items : [],
+          "items" in node ? node.items : [],
           depth + 1
         ),
       });
@@ -211,9 +211,9 @@ class TreeListHelpers {
     let length = 0;
 
     if (
-      typeof value === 'string' ||
-      typeof value === 'number' ||
-      typeof value === 'boolean'
+      typeof value === "string" ||
+      typeof value === "number" ||
+      typeof value === "boolean"
     ) {
       length = value.toString().length;
     }
@@ -226,7 +226,7 @@ class TreeListHelpers {
   }
 
   public export(): Promise<void> {
-    this.component.beginCustomLoading('Exporting to Excel...');
+    this.component.beginCustomLoading("Exporting to Excel...");
 
     return this.getData().then((rows: any) => {
       this.generateColumns();
