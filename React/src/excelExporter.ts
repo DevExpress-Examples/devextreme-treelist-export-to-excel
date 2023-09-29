@@ -90,7 +90,7 @@ class TreeListHelpers {
 
   private convertToHierarchical(
     data: Employee[],
-    id: any = this.rootValue,
+    id = this.rootValue,
   ): EmployeeWithItems[] {
     const result: EmployeeWithItems[] = [];
     const roots: EmployeeWithItems[] = [];
@@ -113,7 +113,9 @@ class TreeListHelpers {
     rows.forEach((row: EmployeeWithItems) => {
       this.exportRow(row);
 
-      if (this.hasChildren(row)) this.exportRows(row.items as EmployeeWithItems[]);
+      if (this.hasChildren(row)) {
+        this.exportRows(row.items as EmployeeWithItems[]);
+      }
     });
   }
 
@@ -130,15 +132,19 @@ class TreeListHelpers {
 
   private formatDates(row: EmployeeWithItems): void {
     this.dateColumns.forEach((column) => {
-      if (column.dataField !== undefined) row[column.dataField] = new Date(row[column.dataField]);
+      if (column.dataField !== undefined) {
+        row[column.dataField] = new Date(row[column.dataField]);
+      }
     });
   }
 
-  private assignLookupText(row: any): void {
-    this.lookupColumns.forEach((column: any) => {
-      row[column.dataField] = column.lookup.calculateCellValue(
-        row[column.dataField],
-      );
+  private assignLookupText(row: EmployeeWithItems): void {
+    this.lookupColumns.forEach((column) => {
+      if (column.dataField && column.lookup?.calculateCellValue) {
+        row[column.dataField] = column.lookup.calculateCellValue(
+          row[column.dataField],
+        );
+      }
     });
   }
 

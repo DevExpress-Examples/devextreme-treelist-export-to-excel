@@ -35,13 +35,20 @@ class TreeListHelpers {
     this.component = component;
     this.worksheet = worksheet;
     this.columns = this.component.getVisibleColumns();
-    this.dateColumns = this.columns.filter((column) => column.dataType === 'date' || column.dataType === 'datetime');
-    this.lookupColumns = this.columns.filter((column) => column.lookup !== undefined);
+    this.dateColumns = this.columns.filter(
+      (column) => column.dataType === 'date' || column.dataType === 'datetime',
+    );
+    this.lookupColumns = this.columns.filter(
+      (column) => column.lookup !== undefined,
+    );
 
     this.rootValue = this.component.option('rootValue');
     this.parentIdExpr = this.component.option('parentIdExpr') as string;
-    this.keyExpr = (this.component.option('keyExpr') ?? this.component.getDataSource().key()) as string;
-    this.dataStructure = this.component.option('dataStructure') as DataStructure;
+    this.keyExpr = (this.component.option('keyExpr')
+      ?? this.component.getDataSource().key()) as string;
+    this.dataStructure = this.component.option(
+      'dataStructure',
+    ) as DataStructure;
 
     const properties: any = this.worksheet.properties;
     properties.outlineProperties = {
@@ -64,7 +71,10 @@ class TreeListHelpers {
     return this.depthDecorator(rows);
   }
 
-  private depthDecorator(data: Employee[] | EmployeeWithItems[], depth = 0): EmployeeWithItems[] {
+  private depthDecorator(
+    data: Employee[] | EmployeeWithItems[],
+    depth = 0,
+  ): EmployeeWithItems[] {
     const result: EmployeeWithItems[] = [];
 
     data.forEach((node: any) => {
@@ -78,7 +88,10 @@ class TreeListHelpers {
     return result;
   }
 
-  private convertToHierarchical(data: Employee[], id: any = this.rootValue): EmployeeWithItems[] {
+  private convertToHierarchical(
+    data: Employee[],
+    id = this.rootValue,
+  ): EmployeeWithItems[] {
     const result: EmployeeWithItems[] = [];
     const roots: EmployeeWithItems[] = [];
 
@@ -100,7 +113,9 @@ class TreeListHelpers {
     rows.forEach((row: EmployeeWithItems) => {
       this.exportRow(row);
 
-      if (this.hasChildren(row)) this.exportRows(row.items as EmployeeWithItems[]);
+      if (this.hasChildren(row)) {
+        this.exportRows(row.items as EmployeeWithItems[]);
+      }
     });
   }
 
@@ -117,21 +132,29 @@ class TreeListHelpers {
 
   private formatDates(row: EmployeeWithItems): void {
     this.dateColumns.forEach((column) => {
-      if (column.dataField !== undefined) row[column.dataField] = new Date(row[column.dataField]);
+      if (column.dataField !== undefined) {
+        row[column.dataField] = new Date(row[column.dataField]);
+      }
     });
   }
 
-  private assignLookupText(row: any): void {
-    this.lookupColumns.forEach((column: any) => {
-      row[column.dataField] = column.lookup.calculateCellValue(row[column.dataField]);
+  private assignLookupText(row: EmployeeWithItems): void {
+    this.lookupColumns.forEach((column) => {
+      if (column.dataField && column.lookup?.calculateCellValue) {
+        row[column.dataField] = column.lookup.calculateCellValue(
+          row[column.dataField],
+        );
+      }
     });
   }
 
   private generateColumns(): void {
-    this.worksheet.columns = this.columns.map(({ caption, dataField }: Column) => ({
-      header: caption,
-      key: dataField,
-    }));
+    this.worksheet.columns = this.columns.map(
+      ({ caption, dataField }: Column) => ({
+        header: caption,
+        key: dataField,
+      }),
+    );
   }
 
   private hasChildren(row: EmployeeWithItems): boolean {
@@ -144,7 +167,10 @@ class TreeListHelpers {
       if (column.number === 1) {
         // first column
         column.eachCell((cell: any) => {
-          const indent: number = cell.alignment ? cell.alignment.indent * (PIXELS_PER_INDENT / PIXELS_PER_EXCEL_WIDTH_UNIT) : 0;
+          const indent: number = cell.alignment
+            ? cell.alignment.indent
+              * (PIXELS_PER_INDENT / PIXELS_PER_EXCEL_WIDTH_UNIT)
+            : 0;
           const valueLength: number = cell.value.toString().length;
 
           if (indent + valueLength > maxLength) {
@@ -154,12 +180,23 @@ class TreeListHelpers {
       } else {
         column.values.forEach((v: any) => {
           // date column
-          if (this.dateColumns.some((dateColumn) => dateColumn.dataField === column.key) && typeof v !== 'string' && v.toLocaleDateString().length > maxLength) {
+          if (
+            this.dateColumns.some(
+              (dateColumn) => dateColumn.dataField === column.key,
+            )
+            && typeof v !== 'string'
+            && v.toLocaleDateString().length > maxLength
+          ) {
             maxLength = v.toLocaleDateString().length;
           }
 
           // other columns
-          if (!this.dateColumns.some((dateColumn: any) => dateColumn.dataField === column.key) && v.toString().length > maxLength) {
+          if (
+            !this.dateColumns.some(
+              (dateColumn: any) => dateColumn.dataField === column.key,
+            )
+            && v.toString().length > maxLength
+          ) {
             maxLength = v.toString().length;
           }
         });
@@ -180,7 +217,10 @@ class TreeListHelpers {
   }
 }
 
-function exportTreeList({ component, worksheet }: TreeListExcelProps): Promise<void> {
+function exportTreeList({
+  component,
+  worksheet,
+}: TreeListExcelProps): Promise<void> {
   const helpers = new TreeListHelpers(component, worksheet);
   return helpers.export();
 }
