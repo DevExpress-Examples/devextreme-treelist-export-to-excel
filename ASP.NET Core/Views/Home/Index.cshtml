@@ -2,28 +2,62 @@
 
 <h2>Home</h2>
 
-@(Html.DevExtreme().DataGrid<SampleOrder>()
-    .ShowBorders(true)
-    .DataSource(d => d.Mvc().Controller("SampleData").LoadAction("Get").Key("OrderID"))
-    .Columns(columns => {
-        columns.AddFor(m => m.OrderID);
-        columns.AddFor(m => m.OrderDate);
-        columns.AddFor(m => m.CustomerName);
-        columns.AddFor(m => m.ShipCountry);
-        columns.AddFor(m => m.ShipCity);
+@(
+Html.DevExtreme().TreeList()
+    .ID("employees")
+    .DataSource(new JS("employees"))
+    .RootValue(-1)
+    .KeyExpr("ID")
+    .ParentIdExpr("Head_ID")
+    .Columns(columns =>
+    {
+        columns.Add()
+            .DataField("Title")
+            .Caption("Position");
+
+        columns.Add().DataField("Full_Name");
+
+        columns.Add().DataField("City");
+
+        columns.Add().DataField("State");
+
+        columns.Add().DataField("Mobile_Phone");
+
+        columns.Add()
+            .DataField("Hire_Date")
+            .DataType(GridColumnDataType.Date);
     })
-    .Paging(p => p.PageSize(10))
-    .FilterRow(f => f.Visible(true))
-    .HeaderFilter(f => f.Visible(true))
-    .GroupPanel(p => p.Visible(true))
-    .Grouping(g => g.AutoExpandAll(false))
-    .RemoteOperations(true)
-    .Summary(s => s
-        .TotalItems(totalItems => {
-            totalItems.AddFor(m => m.ShipCity).SummaryType(SummaryType.Count);
-        })
-        .GroupItems(groupItems => {
-            groupItems.Add().SummaryType(SummaryType.Count);
-        })
-    )
+    .ShowRowLines(true)
+    .ShowBorders(true)
+    .ColumnAutoWidth(true)
+    .ExpandedRowKeys(new[] { 1 })
+    .Toolbar(toolbar =>
+    {
+        toolbar.Items(items =>
+        {
+            items.Add().Name("exportToXlsx")
+                .LocateInMenu(ToolbarItemLocateInMenuMode.Auto)
+                .Widget(w => w.Button()
+                    .Icon("xlsxfile")
+                    .OnClick("exportToExcel")
+                );
+        });
+    })
 )
+
+<script>
+    function exportToExcel() {
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('Employees');
+        const component = $('#employees').dxTreeList('instance');
+
+        exportTreeList({
+            component, 
+            worksheet
+        }).then(function () {
+            workbook.xlsx.writeBuffer().then(function (buffer) {
+                saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'Employees.xlsx');
+            });
+        })
+    }
+</script>
