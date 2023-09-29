@@ -1,4 +1,5 @@
 export interface Employee {
+  [key: string]: any;
   ID: number;
   Head_ID: number;
   Full_Name: string;

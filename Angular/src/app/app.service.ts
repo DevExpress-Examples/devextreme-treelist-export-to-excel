@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 
 export interface Employee {
+  [key: string]: any;
+
   ID: number;
 
   Head_ID: number;
@@ -28,7 +30,7 @@ export interface Employee {
 
 export interface EmployeeWithItems extends Employee {
   [key: string]: any;
-  items: Employee[] | EmployeeWithItems[];
+  items: (Employee | EmployeeWithItems)[];
   depth: number;
 }
 
