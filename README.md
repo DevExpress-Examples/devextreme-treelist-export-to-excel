@@ -14,11 +14,9 @@ While TreeList does not have a built-in export feature, you can use the ExcelJS 
 ## Implementation details
 
 - Install or reference the ExcelJS and file-saver packages.
-- Add a reference to the `excelExporter` file. (See the appropriate `excelExporter` file for your framework below.)
-- Define the export button in the TreeList`s toolbar.
+- Add a reference to the `excelExporter` file (see the `excelExporter` file for your framework below).
+- Define the export button in the TreeList toolbar.
 - Implement the export button's onClick handler and call the `exportTreeList` method.
-
-The example below shows how to export TreeList to Excel file:
 
 ```js
 function exportToExcel() {
@@ -66,9 +64,3 @@ function exportToExcel() {
 
 - [Getting Started with TreeList](https://js.devexpress.com/Documentation/Guide/UI_Components/TreeList/Getting_Started_with_TreeList/)
 - [TreeList - toolbar API reference](https://js.devexpress.com/Documentation/ApiReference/UI_Components/dxTreeList/Configuration/toolbar/)
-
-## More Examples
-
-- link
-- link
-- ...
