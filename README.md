@@ -1,6 +1,6 @@
 # TreeList for DevExtreme - Export to Excel
 
-While TreeList does not have a built-in export feature, you can use the ExcelJS and FileSaver libraries to accomplish a similar functionality.
+While TreeList does not have a built-in export feature, you can use the ExcelJS and FileSaver libraries to access a similar functionality.
 
 ![](export-to-excel.png)
 
