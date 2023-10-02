@@ -1,4 +1,5 @@
 export interface Employee {
+  [key: string]: any;
   ID: number;
   Head_ID: number;
   Full_Name: string;
@@ -15,7 +16,7 @@ export interface Employee {
 
 export interface EmployeeWithItems extends Employee {
   [key: string]: any;
-  items: Employee[] | EmployeeWithItems[];
+  items: (Employee | EmployeeWithItems)[];
   depth: number;
 }
 
