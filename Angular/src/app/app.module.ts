@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { DxButtonModule } from 'devextreme-angular/ui/button';
+import { DxTreeListModule } from 'devextreme-angular/ui/tree-list';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { Service } from './app.service';
 
 @NgModule({
   declarations: [
@@ -11,9 +12,9 @@ import { AppComponent } from './app.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    DxButtonModule,
+    DxTreeListModule,
   ],
-  providers: [],
+  providers: [Service],
   bootstrap: [AppComponent],
 })
 export class AppModule { }

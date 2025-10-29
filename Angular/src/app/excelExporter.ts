@@ -1,12 +1,13 @@
-import TreeList, { Column, DataStructure } from 'devextreme/ui/tree_list';
-import {
+import type TreeList from 'devextreme/ui/tree_list';
+import type { Column, DataStructure } from 'devextreme/ui/tree_list';
+import type {
   Cell,
   CellValue,
   Column as ExcelColumn,
   Row,
   Worksheet,
-} from 'exceljs';
-import { Employee, EmployeeWithItems } from './data';
+} from 'devextreme-exceljs-fork';
+import type { Employee, EmployeeWithItems } from './app.service';
 
 const MIN_COLUMN_WIDTH = 10;
 const PIXELS_PER_INDENT = 10;
@@ -69,7 +70,7 @@ class TreeListHelpers {
       .getDataSource()
       .store()
       .load()
-      .then((result: Employee[]) => this.processData(result));
+      .then((result: any) => this.processData(result as Employee[]));
   }
 
   private processData(data: Employee[]): EmployeeWithItems[] {
@@ -184,7 +185,7 @@ class TreeListHelpers {
               * (PIXELS_PER_INDENT / PIXELS_PER_EXCEL_WIDTH_UNIT)
             : 0;
 
-          let valueLength = this.getValueLength(cell.value);
+          const valueLength = this.getValueLength(cell.value);
 
           if (indent + valueLength > maxLength) {
             maxLength = indent + valueLength;
@@ -193,10 +194,10 @@ class TreeListHelpers {
       }
 
       // other columns
-      if (column.number !== 1) {
-        column.values?.forEach((value: CellValue) => {
+      if (column.number !== 1 && Array.isArray(column.values)) {
+        column.values.forEach((value: CellValue) => {
           if (value === null || value === undefined) return;
-          let valueLength = this.getValueLength(value);
+          const valueLength = this.getValueLength(value);
 
           if (valueLength > maxLength) maxLength = valueLength;
         });

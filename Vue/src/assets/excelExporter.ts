@@ -6,7 +6,7 @@ import type {
   Column as ExcelColumn,
   Row,
   Worksheet,
-} from 'exceljs';
+} from 'devextreme-exceljs-fork';
 import type { Employee, EmployeeWithItems } from './data';
 
 const MIN_COLUMN_WIDTH = 10;
@@ -43,10 +43,10 @@ class TreeListHelpers {
     this.worksheet = worksheet;
     this.columns = this.component.getVisibleColumns();
     this.dateColumns = this.columns.filter(
-      (column) => column.dataType === 'date' || column.dataType === 'datetime'
+      (column) => column.dataType === 'date' || column.dataType === 'datetime',
     );
     this.lookupColumns = this.columns.filter(
-      (column) => column.lookup !== undefined
+      (column) => column.lookup !== undefined,
     );
 
     this.rootValue = this.component.option('rootValue');
@@ -54,7 +54,7 @@ class TreeListHelpers {
     this.keyExpr = (this.component.option('keyExpr') ??
       this.component.getDataSource().key()) as string;
     this.dataStructure = this.component.option(
-      'dataStructure'
+      'dataStructure',
     ) as DataStructure;
 
     // bug: check ExcelJS's GitHub issues #1352 & #2218
@@ -70,7 +70,7 @@ class TreeListHelpers {
       .getDataSource()
       .store()
       .load()
-      .then((result: Employee[]) => this.processData(result));
+      .then((result: any) => this.processData(result as Employee[]));
   }
 
   private processData(data: Employee[]): EmployeeWithItems[] {
@@ -81,7 +81,7 @@ class TreeListHelpers {
 
   private depthDecorator(
     data: Employee[] | EmployeeWithItems[],
-    depth = 0
+    depth = 0,
   ): EmployeeWithItems[] {
     const result: EmployeeWithItems[] = [];
 
@@ -91,7 +91,7 @@ class TreeListHelpers {
         depth,
         items: this.depthDecorator(
           'items' in node ? node.items : [],
-          depth + 1
+          depth + 1,
         ),
       });
     });
@@ -101,7 +101,7 @@ class TreeListHelpers {
 
   private convertToHierarchical(
     data: Employee[] | EmployeeWithItems[],
-    id = this.rootValue
+    id = this.rootValue,
   ): EmployeeWithItems[] {
     const result: EmployeeWithItems[] = [];
     const roots: (Employee | EmployeeWithItems)[] = [];
@@ -154,7 +154,7 @@ class TreeListHelpers {
     this.lookupColumns.forEach((column) => {
       if (column.dataField && column.lookup?.calculateCellValue) {
         row[column.dataField] = column.lookup.calculateCellValue(
-          row[column.dataField]
+          row[column.dataField],
         );
       }
     });
@@ -165,7 +165,7 @@ class TreeListHelpers {
       ({ caption, dataField }: Column) => ({
         header: caption,
         key: dataField,
-      })
+      }),
     );
   }
 
@@ -185,7 +185,7 @@ class TreeListHelpers {
               (PIXELS_PER_INDENT / PIXELS_PER_EXCEL_WIDTH_UNIT)
             : 0;
 
-          let valueLength = this.getValueLength(cell.value);
+          const valueLength = this.getValueLength(cell.value);
 
           if (indent + valueLength > maxLength) {
             maxLength = indent + valueLength;
@@ -194,10 +194,10 @@ class TreeListHelpers {
       }
 
       // other columns
-      if (column.number !== 1) {
-        column.values?.forEach((value: CellValue) => {
+      if (column.number !== 1 && Array.isArray(column.values)) {
+        column.values.forEach((value: CellValue) => {
           if (value === null || value === undefined) return;
-          let valueLength = this.getValueLength(value);
+          const valueLength = this.getValueLength(value);
 
           if (valueLength > maxLength) maxLength = valueLength;
         });

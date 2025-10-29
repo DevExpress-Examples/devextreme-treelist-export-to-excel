@@ -17,9 +17,8 @@ let defaultScripts = [
     "node_modules/jquery/dist/jquery.min.js",
     "node_modules/bootstrap/dist/js/bootstrap.min.js"],
     exportScripts = [
-        "node_modules/jszip/dist/jszip.min.js",
-        "node_modules/exceljs/dist/exceljs.min.js",
-        "node_modules/file-saver/FileSaver.min.js"
+        "node_modules/devextreme-exceljs-fork/dist/dx-exceljs-fork.min.js",
+        "node_modules/file-saver/dist/FileSaver.min.js"
     ],
     quillScripts = ["node_modules/devextreme-quill/dist/dx-quill.min.js",
         "node_modules/turndown/dist/turndown.js",
@@ -43,28 +42,30 @@ let dxtStyles = [
 
 /* default configuration */
 
-let styles = dxtStyles;
+/* let styles = dxtStyles;
 let scripts = [...defaultScripts, ...dxtScripts];
+*/
 
 /* // Gantt
 scripts = [...defaultScripts, ...ganttScript, ...dxtScripts];
-styles = [...styles, ...ganttStyles];  
+styles = [...styles, ...ganttStyles];
 */
 
-/* // Diagram 
-scripts = [...defaultScripts, ...diagramScript, ...dxtScripts]; 
+/* // Diagram
+scripts = [...defaultScripts, ...diagramScript, ...dxtScripts];
 styles = [...styles, ...diagramStyles];
 */
 
-/* // HtmlEditor 
+/* // HtmlEditor
 scripts = [...defaultScripts, ...quillScripts, dxtScripts];
 */
 
-/* // Export 
-scripts = [...exportScripts, ...scripts];
-*/
+// Export
+let styles = dxtStyles;
+let scripts = [...exportScripts, ...defaultScripts, ...dxtScripts];
 
- /* // Full bundle 
+
+ /* // Full bundle
 
 scripts = [...exportScripts, ...defaultScripts, ...ganttScript, ...diagramScript, ...quillScripts, ...dxtScripts];
 styles = [...dxtStyles, ...diagramStyles, ...ganttStyles];
