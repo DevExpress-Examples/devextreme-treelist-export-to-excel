@@ -8,7 +8,7 @@
 
 While TreeList does not have a built-in export feature, you can use the ExcelJS and FileSaver libraries to access a similar functionality.
 
-![](export-to-excel.png)
+![](images/export-to-excel.png)
 
 ## Implementation details
 
@@ -48,7 +48,7 @@ function exportToExcel() {
   - [excelExporter.ts](Angular/src/app/excelExporter.ts)
 
 - **Vue**
-  - [Home.vue](Vue/src/components/HomeContent.vue)
+  - [HomeContent.vue](Vue/src/components/HomeContent.vue)
   - [excelExporter.ts](Vue/src/assets/excelExporter.ts)
 - **React**
 
