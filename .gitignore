@@ -307,4 +307,5 @@ TesterMetadata.xml
 */wwwroot/*
 
 !*/wwwroot/css/Site.css
+!*/wwwroot/js/excelExporter.js
 *.DS_Store
