@@ -5,8 +5,10 @@ import { saveAs } from 'file-saver';
 import type { Employee } from './app.service';
 import { Service } from './app.service';
 import { exportTreeList } from './excelExporter';
+import { DxTreeListModule } from 'devextreme-angular/ui/tree-list';
 
 @Component({
+  imports: [DxTreeListModule],
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
