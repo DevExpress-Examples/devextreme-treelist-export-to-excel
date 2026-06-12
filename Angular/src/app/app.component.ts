@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import type { DxTreeListComponent } from 'devextreme-angular/ui/tree-list';
 import { Workbook } from 'devextreme-exceljs-fork';
 import { saveAs } from 'file-saver';
@@ -11,6 +11,7 @@ import { DxTreeListModule } from 'devextreme-angular/ui/tree-list';
   imports: [DxTreeListModule],
   selector: 'app-root',
   templateUrl: './app.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
